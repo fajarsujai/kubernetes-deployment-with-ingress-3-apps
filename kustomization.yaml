@@ -1,0 +1,9 @@
+resources:
+  - namespace-staging.yaml
+  - namespace-production.yaml
+  - sp3-pv.yaml
+  - pvc-wordpress.yaml
+  - deployment-landingpage.yaml
+  - deployment-sosmed.yaml
+  - deployment-wordpress.yaml
+  - sp3-ingress.yaml

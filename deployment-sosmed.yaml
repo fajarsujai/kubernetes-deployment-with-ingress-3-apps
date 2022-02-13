@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-sosmed
+data:
+  config.php: |
+    <?php
+    $db_host = "database-1.cu76kmobl9tm.ap-southeast-1.rds.amazonaws.com";
+    $db_user = "admin";
+    $db_pass = "admin098";
+    $db_name = "dbsosmed";
+    try {
+      //create PDO connection
+      $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user,
+      $db_pass);
+    } catch(PDOException $e) {
+      //show error
+      die("Terjadi masalah: " . $e->getMessage());
+    }
+    ?>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sosmed
+spec:
+  selector:
+    matchLabels:
+      app: sosmed
+  template:
+    metadata:
+      labels:
+        app: sosmed
+    spec:
+      volumes:
+        - name: config-sosmed-pod  #Volume untuk configmap
+          configMap:
+            name: configmap-sosmed
+        # - name: pv-sosmed-storage
+        #   persistentVolumeClaim:
+        #     claimName: pvc-sosmed
+      containers:
+      - name: sosmed
+        image: fajarsujai/sosmed
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: config-sosmed-pod
+            mountPath: "/var/www/html/config.php"
+            subPath: "config.php"
+          # - name: pv-sosmed-storage
+          #   mountPath: "/var/www/html"
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sosmed-service
+spec:
+  selector:
+    app: sosmed
+  ports:
+  - port: 8020
+    targetPort: 80
+
