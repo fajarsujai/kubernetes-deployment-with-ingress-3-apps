@@ -32,9 +32,11 @@ kind: Service
 metadata:
   name: landingpage-service
 spec:
+  type: NodePort
   selector:
     app: landingpage
   ports:
   - port: 8010
     targetPort: 80
+    protocol: TCP
 

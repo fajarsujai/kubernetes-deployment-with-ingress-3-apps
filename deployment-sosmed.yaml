@@ -57,9 +57,11 @@ kind: Service
 metadata:
   name: sosmed-service
 spec:
+  type: NodePort
   selector:
     app: sosmed
   ports:
   - port: 8020
     targetPort: 80
+    protocol: TCP
 
